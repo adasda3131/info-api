@@ -30,7 +30,7 @@ def get_jwt_token_sync(region):
         "US": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
         "SAC": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
         "NA": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
-        "default": "https://projects-fox-x-get-jwt.vercel.app/get?uid=3763606630&password=7FF33285F290DDB97D9A31010DCAA10C2021A03F27C4188A2F6ABA418426527C"
+        "default": "http://jwt.thug4ff.com/token?uid=3721241662&password=40BFAA1391E7848EFE29EE7D98323EAAF92A2176C715B2990828A5F118733460"
     }    
     url = endpoints.get(region, endpoints["default"])
     with jwt_lock:
@@ -92,7 +92,7 @@ def apis(idd, region):
         'Authorization': f'Bearer {token}',
         'X-Unity-Version': '2018.4.11f1',
         'X-GA': 'v1 1',
-        'ReleaseVersion': 'OB49',
+        'ReleaseVersion': 'OB50',
         'Content-Type': 'application/x-www-form-urlencoded',
     }    
     try:
@@ -112,7 +112,7 @@ def apis(idd, region):
 def get_player_info():
     try:
         uid = request.args.get('uid')
-        region = request.args.get('region', 'default').upper()
+        region = request.args.get('region', 'BR').upper()
         custom_key = request.args.get('key', key)
         custom_iv = request.args.get('iv', iv)
         if not uid:
