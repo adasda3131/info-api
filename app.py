@@ -32,11 +32,11 @@ def get_jwt_token_sync(region):
     global jwt_token
     endpoints = {
         "IND": "https://jwtgenchx.vercel.app/token?uid=3976277520&password=3C07CA0CF3C22DB4DB5A00A8C75E3FED7869FB11CED0ADFB5C8DE7E92652B704",
-        "BR": "http://jwt.thug4ff.com/token?uid=3721241662&password=40BFAA1391E7848EFE29EE7D98323EAAF92A2176C715B2990828A5F118733460",
+        "BR": "http://jwt.thug4ff.com/token?uid=3158668455&password=44296D19343151B25DE68286BDC565904A0DA5A5CC5E96B7A7ADBE7C11E07933",
         "US": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
         "SAC": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
         "NA": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
-        "default": "http://jwt.thug4ff.com/token?uid=3721241662&password=40BFAA1391E7848EFE29EE7D98323EAAF92A2176C715B2990828A5F118733460"
+        "default": "http://jwt.thug4ff.com/token?uid=3158668455&password=44296D19343151B25DE68286BDC565904A0DA5A5CC5E96B7A7ADBE7C11E07933"
     }    
     url = endpoints.get(region, endpoints["default"])
     with jwt_lock:
