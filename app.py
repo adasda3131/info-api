@@ -12,16 +12,22 @@ app = Flask(__name__)
 jwt_token = None
 jwt_lock = threading.Lock()
 def extract_token_from_response(data, region):
-    if region == "IND":
-        if data.get('status') in ['success', 'live']:
-            return data.get('token')
-    elif region in ["BR", "US", "SAC", "NA"]:
-        if isinstance(data, dict) and 'token' in data:
-            return data['token']
-    else: 
-        if data.get('status') == 'success':
-            return data.get('token')
-    return None
+    """
+    Função universal e mais robusta para extrair o token da resposta.
+    """
+    # 1. Verifica se a resposta é um dicionário e se a chave 'token' existe.
+    if not isinstance(data, dict) or 'token' not in data:
+        print(f"[{region}] Resposta da API de token é inválida ou não contém a chave 'token'. Resposta: {data}")
+        return None
+
+    # 2. Verifica o campo 'status', se ele existir.
+    #    Aceita 'success' ou 'live' como status válidos.
+    if 'status' in data and data['status'] not in ['success', 'live']:
+        print(f"[{region}] Status da API de token não é válido. Status: {data.get('status')}")
+        return None
+    
+    # 3. Se todas as verificações passaram, retorna o token.
+    return data.get('token')
 def get_jwt_token_sync(region):
     global jwt_token
     endpoints = {
