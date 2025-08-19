@@ -13,7 +13,7 @@ jwt_token = None
 jwt_lock = threading.Lock()
 def extract_token_from_response(data, region):
     """
-    Função universal e mais robusta para extrair o token da resposta.
+    Função universal e mais robusta para extrair o token da re.
     """
     # 1. Verifica se a resposta é um dicionário e se a chave 'token' existe.
     if not isinstance(data, dict) or 'token' not in data:
