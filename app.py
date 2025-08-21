@@ -30,13 +30,13 @@ def extract_token_from_response(data, region):
     return data.get('token')
 def get_jwt_token_sync(region):
     global jwt_token
-    endpoints = {
+    endpoints = {  # https://jwt-info-api-production.up.railway.app/create_jwt?uid=3923823977&password=CA6E4DCC24A1E822147CB05A1F38DD40934AA77176C950FBA153ECA8F70DA2E4
         "IND": "https://jwtgenchx.vercel.app:8000/token?uid=3976277520&password=3C07CA0CF3C22DB4DB5A00A8C75E3FED7869FB11CED0ADFB5C8DE7E92652B704",
-        "BR": "https://jwt-info-api-production.up.railway.app/create_jwt?uid=3923823977&password=CA6E4DCC24A1E822147CB05A1F38DD40934AA77176C950FBA153ECA8F70DA2E4",
+        "BR": "http://jwt.thug4ff.com/token?uid=3923823977&password=CA6E4DCC24A1E822147CB05A1F38DD40934AA77176C950FBA153ECA8F70DA2E4",
         "US": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
         "SAC": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
         "NA": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
-        "default": "https://jwt-info-api-production.up.railway.app/create_jwt?uid=3923823977&password=CA6E4DCC24A1E822147CB05A1F38DD40934AA77176C950FBA153ECA8F70DA2E4"
+        "default": "http://jwt.thug4ff.com/token?uid=3923823977&password=CA6E4DCC24A1E822147CB05A1F38DD40934AA77176C950FBA153ECA8F70DA2E4"
     }    
     url = endpoints.get(region, endpoints["default"])
     with jwt_lock:
