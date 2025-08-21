@@ -95,10 +95,11 @@ def apis(idd, region):
         'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 9; ASUS_Z01QD Build/PI)',
         'Connection': 'Keep-Alive',
         'Expect': '100-continue',
+        'Accept-Encoding': "gzip",
         'Authorization': f'Bearer {token}',
-        'X-Unity-Version': '2025.8.11f1',
+        'X-Unity-Version': "2018.4.11f1",
         'X-GA': 'v1 1',
-        'ReleaseVersion': 'OB50',
+        'ReleaseVersion': 'OB48',
         'Content-Type': 'application/x-www-form-urlencoded',
     }   
     try:
