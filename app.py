@@ -11,12 +11,22 @@ import time
 app = Flask(__name__)
 jwt_token = None
 jwt_lock = threading.Lock()
+
+"""  {
+    "uid": "4121871057",
+    "password": "9F931519890548E88F2E458E28F2DB61797450C2F5739A2B2CAC51A5DFD6D196"
+  },
+  {
+    "uid": "4121887392",
+    "password": "09B77FBA49009A302D9A795BD3C294D8864D5B1184F4744792544B81B7B1A015"
+  }"""
+
 def extract_token_from_response(data, region):
     if region == "IND":
         if data.get('status') in ['success', 'live']:
             return data.get('token')
     elif region in ["BR", "US", "SAC", "NA"]:
-        if 'token' in data: # isinstance(data, dict) and 
+        if isinstance(data, dict) and 'token' in data:
             return data['token']
     else: 
         if data.get('status') == 'success':
@@ -26,11 +36,11 @@ def get_jwt_token_sync(region):
     global jwt_token
     endpoints = {
         "IND": "https://jwtgenchx.vercel.app/token?uid=3976277520&password=3C07CA0CF3C22DB4DB5A00A8C75E3FED7869FB11CED0ADFB5C8DE7E92652B704",
-        "BR": "https://jwt-info-api-production.up.railway.app/create_jwt?uid=3721241662&password=40BFAA1391E7848EFE29EE7D98323EAAF92A2176C715B2990828A5F118733460",
+        "BR": "https://jwt-info-api-production.up.railway.app/create_jwt?uid=4121887392&password=09B77FBA49009A302D9A795BD3C294D8864D5B1184F4744792544B81B7B1A015",
         "US": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
         "SAC": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
         "NA": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
-        "default": "https://jwt-info-api-production.up.railway.app/create_jwt?uid=3763606630&password=7FF33285F290DDB97D9A31010DCAA10C2021A03F27C4188A2F6ABA418426527C"
+        "default": "https://jwt-info-api-production.up.railway.app/create_jwt?uid=4121887392&password=09B77FBA49009A302D9A795BD3C294D8864D5B1184F4744792544B81B7B1A015"
     }    
     url = endpoints.get(region, endpoints["default"])
     with jwt_lock:
@@ -93,8 +103,6 @@ def apis(idd, region):
         'X-Unity-Version': '2018.4.11f1',
         'X-GA': 'v1 1',
         'ReleaseVersion': 'OB50',
-        'Host': 'client.us.freefiremobile.com',  # Host do servidor alvo
-        'Accept': '*/*',  # Aceita qualquer tipo de conteúdo em resposta
         'Content-Type': 'application/x-www-form-urlencoded',
     }    
     try:
@@ -114,12 +122,12 @@ def apis(idd, region):
 def get_player_info():
     try:
         uid = request.args.get('uid')
-        region = request.args.get('region', 'BR').upper()
+        region = request.args.get('region', 'default').upper()
         custom_key = request.args.get('key', key)
         custom_iv = request.args.get('iv', iv)
         if not uid:
             return jsonify({"error": "UID parameter is required"}), 400
-        # threading.Thread(target=jwt_token_updater, args=(region,), daemon=True).start()
+        threading.Thread(target=jwt_token_updater, args=(region,), daemon=True).start()
         message = uid_generator_pb2.uid_generator()
         message.saturn_ = int(uid)
         message.garena = 1
