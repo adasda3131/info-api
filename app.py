@@ -26,11 +26,11 @@ def get_jwt_token_sync(region):
     global jwt_token
     endpoints = {
         "IND": "https://jwtgenchx.vercel.app/token?uid=3976277520&password=3C07CA0CF3C22DB4DB5A00A8C75E3FED7869FB11CED0ADFB5C8DE7E92652B704",
-        "BR": "http://jwt.thug4ff.com/token?uid=3721241662&password=40BFAA1391E7848EFE29EE7D98323EAAF92A2176C715B2990828A5F118733460",
+        "BR": "https://jwt-info-api-production.up.railway.app/create_jwt?uid=3721241662&password=40BFAA1391E7848EFE29EE7D98323EAAF92A2176C715B2990828A5F118733460",
         "US": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
         "SAC": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
         "NA": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
-        "default": "https://projects-fox-x-get-jwt.vercel.app/get?uid=3763606630&password=7FF33285F290DDB97D9A31010DCAA10C2021A03F27C4188A2F6ABA418426527C"
+        "default": "https://jwt-info-api-production.up.railway.app/create_jwt?uid=3763606630&password=7FF33285F290DDB97D9A31010DCAA10C2021A03F27C4188A2F6ABA418426527C"
     }    
     url = endpoints.get(region, endpoints["default"])
     with jwt_lock:
@@ -117,7 +117,7 @@ def get_player_info():
         custom_iv = request.args.get('iv', iv)
         if not uid:
             return jsonify({"error": "UID parameter is required"}), 400
-        threading.Thread(target=jwt_token_updater, args=(region,), daemon=True).start()
+        # threading.Thread(target=jwt_token_updater, args=(region,), daemon=True).start()
         message = uid_generator_pb2.uid_generator()
         message.saturn_ = int(uid)
         message.garena = 1
