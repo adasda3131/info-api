@@ -69,7 +69,7 @@ def jwt_token_updater(region):
 def get_api_endpoint(region):
     endpoints = {
         "IND": "https://client.ind.freefiremobile.com/GetPlayerPersonalShow",
-        "BR": "https://client.us.freefiremobile.com/GetPlayerPersonalShow",
+        "BR": "https://clientbp.ggblueshark.com/GetPlayerPersonalShow",
         "US": "https://client.us.freefiremobile.com/GetPlayerPersonalShow",
         "SAC": "https://client.us.freefiremobile.com/GetPlayerPersonalShow",
         "NA": "https://client.us.freefiremobile.com/GetPlayerPersonalShow",
@@ -94,11 +94,11 @@ def apis(idd, region):
     headers = {
         'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 9; ASUS_Z01QD Build/PI)',
         'Connection': 'Keep-Alive',
-        # 'Expect': '100-continue',
+        'Expect': '100-continue',
         'Authorization': f'Bearer {token}',
-        # 'X-Unity-Version': '2018.4.11f1',
+        'X-Unity-Version': '2018.4.11f1',
         'X-GA': 'v1 1',
-        'ReleaseVersion': 'OB49',
+        'ReleaseVersion': 'OB50',
         'Content-Type': 'application/x-www-form-urlencoded',
     }   
     try:
