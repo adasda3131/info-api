@@ -3,69 +3,80 @@ from Crypto.Util.Padding import pad
 import binascii
 import requests
 from flask import Flask, jsonify, request
+import os
 from data_pb2 import AccountPersonalShowInfo
 from google.protobuf.json_format import MessageToDict
 import uid_generator_pb2
 import threading
 import time
+
 app = Flask(__name__)
+
+# --- Gerenciamento de Token ---
 jwt_token = None
 jwt_lock = threading.Lock()
-def extract_token_from_response(data, region):
-    """
-    Função universal e mais robusta para extrair o token da re.
-    """
-    # 1. Verifica se a resposta é um dicionário e se a chave 'token' existe.
-    if not isinstance(data, dict) or 'token' not in data:
-        print(f"[{region}] Resposta da API de token é inválida ou não contém a chave 'token'. Resposta: {data}")
-        return None
 
-    # 2. Verifica o campo 'status', se ele existir.
-    #    Aceita 'success' ou 'live' como status válidos.
-    if 'status' in data and data['status'] not in ['success', 'live']:
-        print(f"[{region}] Status da API de token não é válido. Status: {data.get('status')}")
+def extract_token_from_response(data, region):
+    if not isinstance(data, dict):
+        print(f"[{region}] Resposta da API de token não é um JSON válido. Resposta: {data}")
         return None
-    
-    # 3. Se todas as verificações passaram, retorna o token.
-    return data.get('token')
+    # Adapte para a resposta da SUA API
+    token = data.get('token')
+    status = data.get('status')
+    if token and status == 'live':
+        return token
+    print(f"[{region}] Resposta da API de token é inválida. Token: {token}, Status: {status}")
+    return None
+
 def get_jwt_token_sync(region):
     global jwt_token
-    endpoints = {  # https://jwt-info-api-production.up.railway.app/create_jwt?uid=3923823977&password=CA6E4DCC24A1E822147CB05A1F38DD40934AA77176C950FBA153ECA8F70DA2E4
-        "IND": "https://jwtgenchx.vercel.app:8000/token?uid=3976277520&password=3C07CA0CF3C22DB4DB5A00A8C75E3FED7869FB11CED0ADFB5C8DE7E92652B704",
-        "BR": "http://jwt.thug4ff.com/token?uid=3923823977&password=CA6E4DCC24A1E822147CB05A1F38DD40934AA77176C950FBA153ECA8F70DA2E4",
-        "US": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
-        "SAC": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
-        "NA": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
-        "default": "http://jwt.thug4ff.com/token?uid=3923823977&password=CA6E4DCC24A1E822147CB05A1F38DD40934AA77176C950FBA153ECA8F70DA2E4"
-    }    
-    url = endpoints.get(region, endpoints["default"])
+    
+    # <<< MUDANÇA CRÍTICA: Use sua própria API de JWT que está no Railway!
+    # Substitua a URL abaixo pela URL real da sua outra aplicação no Railway.
+    SUA_API_JWT_URL = "http://jwt.thug4ff.com/token?" 
+    
+    endpoints = {
+        "BR": f"{SUA_API_JWT_URL}/create_jwt?uid=3923823977&password=CA6E4DCC24A1E822147CB05A1F38DD40934AA77176C950FBA153ECA8F70DA2E4",
+        # Adicione outras regiões se necessário, apontando para sua API
+    }
+    
+    url = endpoints.get(region, endpoints["BR"]) # Padrão para BR se a região não for encontrada
+    
+    # O lock garante que apenas uma thread atualize o token por vez
     with jwt_lock:
         try:
-            response = requests.get(url, timeout=10)
+            response = requests.get(url, timeout=15) # Aumentei o timeout
             if response.status_code == 200:
                 data = response.json()
                 token = extract_token_from_response(data, region)
                 if token:
                     jwt_token = token
-                    print(f"JWT Token for {region} updated successfully: {token[:50]}...")
+                    print(f"JWT Token para {region} atualizado com SUCESSO.")
                     return jwt_token
                 else:
-                    print(f"Failed to extract token from response for {region}")
+                    print(f"Falha ao extrair token da resposta para {region}")
             else:
-                print(f"Failed to get JWT token for {region}: HTTP {response.status_code}")
+                print(f"Falha ao obter token JWT para {region}: HTTP {response.status_code} - {response.text}")
         except Exception as e:
-            print(f"Request error for {region}: {e}")   
+            print(f"Erro na requisição para obter token JWT para {region}: {e}")   
     return None
+
 def ensure_jwt_token_sync(region):
-    global jwt_token
+    # Se o token não existe, busca um novo
     if not jwt_token:
-        print(f"JWT token for {region} is missing. Attempting to fetch a new one...")
+        print(f"Token JWT para {region} está faltando. Buscando um novo...")
         return get_jwt_token_sync(region)
     return jwt_token
+
 def jwt_token_updater(region):
+    print("-> Thread de atualização de token iniciada.")
     while True:
+        print("-> Atualizando token JWT em segundo plano...")
         get_jwt_token_sync(region)
+        # Atualiza a cada 5 minutos
         time.sleep(300)
+
+# --- Lógica da API (praticamente sem mudanças) ---
 def get_api_endpoint(region):
     endpoints = {
         "IND": "https://client.ind.freefiremobile.com/GetPlayerPersonalShow",
@@ -76,8 +87,10 @@ def get_api_endpoint(region):
         "default": "https://clientbp.ggblueshark.com/GetPlayerPersonalShow"
     }
     return endpoints.get(region, endpoints["default"])
+
 key = "Yg&tc%DEuh6%Zc^8"
 iv = "6oyZDr22E3ychjM%"
+
 def encrypt_aes(hex_data, key, iv):
     key = key.encode()[:16]
     iv = iv.encode()[:16]
@@ -85,36 +98,45 @@ def encrypt_aes(hex_data, key, iv):
     padded_data = pad(bytes.fromhex(hex_data), AES.block_size)
     encrypted_data = cipher.encrypt(padded_data)
     return binascii.hexlify(encrypted_data).decode()
+
 def apis(idd, region):
-    global jwt_token    
-    token = ensure_jwt_token_sync(region)
-    if not token:
-        raise Exception(f"Failed to get JWT token for region {region}")    
-    endpoint = get_api_endpoint(region)    
-    headers = {
-        'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 9; ASUS_Z01QD Build/PI)',
-        'Connection': 'Keep-Alive',
-        'Expect': '100-continue',
-        'Accept-Encoding': "gzip",
-        'Authorization': f'Bearer {token}',
-        'X-Unity-Version': "2018.4.11f1",
-        'X-GA': 'v1 1',
-        'ReleaseVersion': 'OB48',
-        'Content-Type': 'application/x-www-form-urlencoded',
-    }   
-    try:
-        data = bytes.fromhex(idd)
-        response = requests.post(
-            endpoint,
-            headers=headers,
-            data=data,
-            timeout=10
-        )
-        response.raise_for_status()
-        return response.content.hex()
-    except requests.exceptions.RequestException as e:
-        print(f"API request to {endpoint} failed: {e}")
-        raise
+    # <<< MUDANÇA: Se o token falhar, tenta buscar um novo e refazer a chamada UMA VEZ.
+    # Isso torna a API "auto-corrigível" se o token expirar.
+    for attempt in range(2):
+        token = ensure_jwt_token_sync(region)
+        if not token:
+            return jsonify({"error": f"Não foi possível obter um token JWT válido para a região {region}"}), 503
+
+        endpoint = get_api_endpoint(region)    
+        headers = {
+            'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 9; ASUS_Z01QD Build/PI)',
+            'Authorization': f'Bearer {token}',
+            'Content-Type': 'application/octet-stream', # Alterado para o tipo correto
+        }
+        
+        try:
+            data = bytes.fromhex(idd)
+            response = requests.post(endpoint, headers=headers, data=data, timeout=10)
+            
+            if response.status_code == 401 and attempt == 0:
+                print("Token inválido (401). Forçando a busca por um novo token e tentando novamente...")
+                get_jwt_token_sync(region) # Força a atualização
+                continue # Tenta novamente no loop
+            
+            response.raise_for_status()
+            return response.content.hex()
+            
+        except requests.exceptions.RequestException as e:
+            print(f"Falha na requisição da API para {endpoint}: {e}")
+            raise
+    
+    # Se chegou aqui, as duas tentativas falharam
+    raise Exception("Falha ao processar a requisição após nova tentativa com novo token.")
+
+@app.route("/")
+def health_check():
+    return jsonify({"status": "ok"})
+
 @app.route('/accinfo', methods=['GET'])
 def get_player_info():
     try:
@@ -122,31 +144,46 @@ def get_player_info():
         region = request.args.get('region', 'BR').upper()
         custom_key = request.args.get('key', key)
         custom_iv = request.args.get('iv', iv)
+
         if not uid:
             return jsonify({"error": "UID parameter is required"}), 400
-        threading.Thread(target=jwt_token_updater, args=(region,), daemon=True).start()
+
         message = uid_generator_pb2.uid_generator()
         message.saturn_ = int(uid)
         message.garena = 1
         protobuf_data = message.SerializeToString()
         hex_data = binascii.hexlify(protobuf_data).decode()
+        
         encrypted_hex = encrypt_aes(hex_data, custom_key, custom_iv)
         api_response = apis(encrypted_hex, region) 
+        
         if not api_response:
-            return jsonify({"error": "Empty response from API"}), 400
+            return jsonify({"error": "Resposta vazia da API da Garena"}), 500
+            
         message = AccountPersonalShowInfo()
         message.ParseFromString(bytes.fromhex(api_response)) 
         result = MessageToDict(message)
-        result['Owners'] = ['TeamxCutehack!!']
+        
+        result['Owners'] = ['erick fodao']
         return jsonify(result)
+
     except ValueError:
-        return jsonify({"error": "Invalid UID format"}), 400
+        return jsonify({"error": "Formato de UID inválido"}), 400
     except Exception as e:
-        print(f"Error processing request: {e}")
-        return jsonify({"error": f"Failure to process the data: {str(e)}"}), 500
-@app.route('/favicon.ico')
-def favicon():
-    return '', 404
+        print(f"Erro ao processar a requisição: {e}")
+        return jsonify({"error": f"Falha ao processar os dados: {str(e)}"}), 500
+
 if __name__ == "__main__":
-    ensure_jwt_token_sync("BR")
-    app.run(host="0.0.0.0", port=5552)
+    # Define a região padrão para a aplicação
+    DEFAULT_REGION = "BR"
+    
+    # Busca o token inicial ao iniciar
+    ensure_jwt_token_sync(DEFAULT_REGION)
+    
+    # <<< MUDANÇA CRÍTICA: Inicia a thread de atualização APENAS UMA VEZ
+    updater_thread = threading.Thread(target=jwt_token_updater, args=(DEFAULT_REGION,), daemon=True)
+    updater_thread.start()
+    
+    # Inicia o servidor Flask
+    port = int(os.environ.get("PORT", 5552))
+    app.run(host="0.0.0.0", port=port)
