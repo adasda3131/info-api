@@ -36,11 +36,11 @@ def get_jwt_token_sync(region):
     global jwt_token
     endpoints = {
         "IND": "https://jwtgenchx.vercel.app/token?uid=3976277520&password=3C07CA0CF3C22DB4DB5A00A8C75E3FED7869FB11CED0ADFB5C8DE7E92652B704",
-        "BR": "https://jwt-info-api-production.up.railway.app/create_jwt?uid=4121887392&password=09B77FBA49009A302D9A795BD3C294D8864D5B1184F4744792544B81B7B1A015",
+        "BR": "http://jwt-api.recargagames.pw/create_jwt?uid=4121887392&password=09B77FBA49009A302D9A795BD3C294D8864D5B1184F4744792544B81B7B1A015",
         "US": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
         "SAC": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
         "NA": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
-        "default": "https://jwt-info-api-production.up.railway.app/create_jwt?uid=4121887392&password=09B77FBA49009A302D9A795BD3C294D8864D5B1184F4744792544B81B7B1A015"
+        "default": "http://jwt-api.recargagames.pw/create_jwt?uid=4121887392&password=09B77FBA49009A302D9A795BD3C294D8864D5B1184F4744792544B81B7B1A015"
     }    
     url = endpoints.get(region, endpoints["default"])
     with jwt_lock:
@@ -140,7 +140,7 @@ def get_player_info():
         message = AccountPersonalShowInfo()
         message.ParseFromString(bytes.fromhex(api_response)) 
         result = MessageToDict(message)
-        result['Owners'] = ['TeamxCutehack!!']
+        result['Owners'] = ['Ofertinha Braba']
         return jsonify(result)
     except ValueError:
         return jsonify({"error": "Invalid UID format"}), 400
