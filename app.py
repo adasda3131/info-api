@@ -93,6 +93,8 @@ def apis(idd, region):
         'X-Unity-Version': '2018.4.11f1',
         'X-GA': 'v1 1',
         'ReleaseVersion': 'OB50',
+        'Host': 'client.us.freefiremobile.com',  # Host do servidor alvo
+        'Accept': '*/*',  # Aceita qualquer tipo de conteúdo em resposta
         'Content-Type': 'application/x-www-form-urlencoded',
     }    
     try:
