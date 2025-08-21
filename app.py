@@ -69,7 +69,7 @@ def jwt_token_updater(region):
 def get_api_endpoint(region):
     endpoints = {
         "IND": "https://client.ind.freefiremobile.com/GetPlayerPersonalShow",
-        "BR": "https://clientbp.ggblueshark.com/GetPlayerPersonalShow",
+        "BR": "https://client.us.freefiremobile.com/GetPlayerPersonalShow",
         "US": "https://client.us.freefiremobile.com/GetPlayerPersonalShow",
         "SAC": "https://client.us.freefiremobile.com/GetPlayerPersonalShow",
         "NA": "https://client.us.freefiremobile.com/GetPlayerPersonalShow",
@@ -96,7 +96,7 @@ def apis(idd, region):
         'Connection': 'Keep-Alive',
         'Expect': '100-continue',
         'Authorization': f'Bearer {token}',
-        'X-Unity-Version': '2018.4.11f1',
+        'X-Unity-Version': '2025.8.11f1',
         'X-GA': 'v1 1',
         'ReleaseVersion': 'OB50',
         'Content-Type': 'application/x-www-form-urlencoded',
