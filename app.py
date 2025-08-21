@@ -33,7 +33,7 @@ def get_jwt_token_sync(region):
     
     # <<< MUDANÇA CRÍTICA: Use sua própria API de JWT que está no Railway!
     # Substitua a URL abaixo pela URL real da sua outra aplicação no Railway.
-    SUA_API_JWT_URL = "http://jwt.thug4ff.com/token?" 
+    SUA_API_JWT_URL = "http://jwt.thug4ff.com" # /token?
     
     endpoints = {
         "BR": f"{SUA_API_JWT_URL}/create_jwt?uid=3923823977&password=CA6E4DCC24A1E822147CB05A1F38DD40934AA77176C950FBA153ECA8F70DA2E4",
