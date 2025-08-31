@@ -102,7 +102,7 @@ def apis(idd, region):
         'Authorization': f'Bearer {token}',
         'X-Unity-Version': '2018.4.11f1',
         'X-GA': 'v1 1',
-        'ReleaseVersion': 'OB48',
+        'ReleaseVersion': 'OB49',
         'Content-Type': 'application/x-www-form-urlencoded',
     }    
     try:
@@ -152,4 +152,4 @@ def favicon():
     return '', 404
 if __name__ == "__main__":
     ensure_jwt_token_sync("BR")
-    app.run(host="0.0.0.0", port=5550)
+    app.run(host="0.0.0.0", port=5552)
