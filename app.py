@@ -73,7 +73,7 @@ def jwt_token_updater(region):
 def get_api_endpoint(region):
     endpoints = {
         "IND": "https://client.ind.freefiremobile.com/GetPlayerPersonalShow",
-        "BR": "https://client.us.freefiremobile.com/GetPlayerPersonalShow",
+        "BR": "https://clientbp.ggblueshark.com/GetPlayerPersonalShow",
         "US": "https://client.us.freefiremobile.com/GetPlayerPersonalShow",
         "SAC": "https://client.us.freefiremobile.com/GetPlayerPersonalShow",
         "NA": "https://client.us.freefiremobile.com/GetPlayerPersonalShow",
