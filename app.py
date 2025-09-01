@@ -152,4 +152,4 @@ def favicon():
     return '', 404
 if __name__ == "__main__":
     ensure_jwt_token_sync("BR")
-    app.run(host="0.0.0.0", port=5552)
+    app.run(host="0.0.0.0", port=5550)
