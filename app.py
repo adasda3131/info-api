@@ -36,11 +36,11 @@ def get_jwt_token_sync(region):
     global jwt_token
     endpoints = {
         "IND": "https://jwtgenchx.vercel.app/token?uid=4121887392&password=3C07CA0CF3C22DB4DB5A00A8C75E3FED7869FB11CED0ADFB5C8DE7E92652B704",
-        "BR": "https://jwt-api.recargagames.pw/create_jwt?uid=4121871057&password=9F931519890548E88F2E458E28F2DB61797450C2F5739A2B2CAC51A5DFD6D196",
+        "BR": "https://jwt-api.freefire-oficial.com/create_jwt?uid=4121871057&password=9F931519890548E88F2E458E28F2DB61797450C2F5739A2B2CAC51A5DFD6D196",
         "US": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
         "SAC": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
         "NA": "https://tokenalljwt.onrender.com/api/oauth_guest?uid=3787481313&password=JlOivPeosauV0l9SG6gwK39lH3x2kJkO",
-        "default": "https://jwt-api.recargagames.pw/create_jwt?uid=4121871057&password=9F931519890548E88F2E458E28F2DB61797450C2F5739A2B2CAC51A5DFD6D196"
+        "default": "https://jwt-api.freefire-oficial.com/create_jwt?uid=4121871057&password=9F931519890548E88F2E458E28F2DB61797450C2F5739A2B2CAC51A5DFD6D196"
     }    
     url = endpoints.get(region, endpoints["default"])
     with jwt_lock:
